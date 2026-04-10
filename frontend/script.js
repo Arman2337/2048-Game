@@ -1,6 +1,6 @@
 // --- CONFIGURATION ---
 // Change this to your AWS API Gateway URL when deploying to the cloud
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = 'https://hj910pzooe.execute-api.eu-north-1.amazonaws.com/default/gameBackendHandler';
 
 // --- GAME LOGIC ---
 const SIZE = 4;
