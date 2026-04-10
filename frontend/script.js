@@ -1,6 +1,6 @@
 // --- CONFIGURATION ---
 // Change this to your AWS API Gateway URL when deploying to the cloud
-const API_URL = 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL;
 
 // --- GAME LOGIC ---
 const SIZE = 4;
@@ -233,13 +233,14 @@ window.addEventListener('touchend', e => {
 
 
 // --- API INTEGRATION ---
+// --- API INTEGRATION ---
 refreshLbBtn.addEventListener('click', fetchLeaderboard);
 
 async function fetchLeaderboard() {
   leaderboardLoading.classList.remove('hidden');
   leaderboardList.innerHTML = '';
   try {
-    const res = await fetch(`${API_URL}/leaderboard`);
+    const res = await fetch(API_URL); // ✅ FIXED
     if (!res.ok) throw new Error('API Error');
     const data = await res.json();
     
@@ -269,7 +270,7 @@ submitScoreBtn.addEventListener('click', async () => {
   const username = playerNameInput.value.trim();
   if (!username) {
     submitMsg.innerText = 'Please enter a name!';
-    submitMsg.style.color = '#f87171'; // red
+    submitMsg.style.color = '#f87171';
     return;
   }
   
@@ -278,7 +279,7 @@ submitScoreBtn.addEventListener('click', async () => {
   submitMsg.innerText = '';
   
   try {
-    const res = await fetch(`${API_URL}/score`, {
+    const res = await fetch(API_URL, { // ✅ FIXED
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, score })
@@ -286,11 +287,8 @@ submitScoreBtn.addEventListener('click', async () => {
     
     if (!res.ok) throw new Error('Failed to submit');
     submitMsg.innerText = 'Score submitted! 🎉';
-    submitMsg.style.color = '#a7f3d0'; // green
-    playerNameInput.disabled = true;
-    submitScoreBtn.style.display = 'none';
+    submitMsg.style.color = '#a7f3d0';
     
-    // Refresh leaderboard
     fetchLeaderboard();
     
   } catch (err) {
